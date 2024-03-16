@@ -62,7 +62,7 @@ const downloadAll = downloads => {
     let final;
     if (!file) {
         final = true;
-        file = ["./minecraft/versions/" + version + "/client.jar", CLIENT_URL];
+        file = ["./minecraft/versions/" + version + "/" + version + ".jar", CLIENT_URL];
         fs.writeFileSync("./minecraft/versions/" + version + "/" + version + ".json", JSON.stringify(CLIENT_DATA));
     }
     console.log("= == File Info ===");
@@ -106,7 +106,7 @@ const startInstall = (username, versionId) => {
             const nativesDownload = () => {};
             const assetsDownload = () => {
                 console.log("[Downloader] Saving assets to ./minecraft/assets/" + version.assetIndex.id);
-                if (fs.existsSync("./minecraft/assets/" + version.assetIndex.id)) return nativesDownload();
+                if (fs.existsSync("./minecraft/assets/" + version.assetIndex.id)) return downloadAll(downloads);
                 fs.mkdirSync("./minecraft/assets/" + version.assetIndex.id);
                 fetch(version.assetIndex.url).then(e => e.json()).then(assets => {
                     const array = Object.keys(assets.objects);
@@ -128,7 +128,7 @@ const startInstall = (username, versionId) => {
             const clientDownload = () => {
                 console.log("[Downloader] Saving client to ./minecraft/versions/" + versionId);
                 fs.mkdirSync("./minecraft/versions/" + versionId);
-                downloads.push("./minecraft/versions/" + versionId + "/client.jar", version.downloads.client.url);
+                downloads.push("./minecraft/versions/" + versionId + "/" + versionId + ".jar", version.downloads.client.url);
                 console.log("[Downloader] Client.jar has been pushed to queue");
                 CLIENT_URL = version.downloads.client.url;
                 assetsDownload();
@@ -176,7 +176,7 @@ while (true) {
         const assetIndex = "1.8";
         const assetsDir = "./minecraft/assets/";
         const nativesDir = "./minecraft/natives/";
-        const clientJar = "./minecraft/versions/" + version + "/client.jar";
+        const clientJar = "./minecraft/versions/" + version + "/" + version + ".jar";
         const { mainClass, minecraftArguments } = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
         let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + resolve(clientJar) + ";" + libs.map(e =>resolve("./minecraft/libraries/" + version + "/" + e)).join(";") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username).replace("${version_name}", version).replace("${game_directory}", resolve("./minecraft")).replace("${assets_root}", '"' + resolve(assetsDir.split("/").slice(0, -1).join("/")) + '"').replace("${assets_index_name}", '"' + assetIndex + '"').replace("${auth_uuid}", uuid).replace("--accessToken ${auth_access_token}", "").replace("${user_properties}", "normal").replace("${user_type}", "full") + " --accessToken letmeplaylol";
         console.log("[Ethyr] Command generated: " + command);
