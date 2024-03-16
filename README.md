@@ -4,6 +4,12 @@ Current version: 1.0
 
 A console-based minecraft launcher written in javascript
 
+## Requirements
+
+- Set natives folder as you need, by default it's for windows here.
+- Install [OpenAL](<https://www.openal.org/downloads/>)
+- Install [NodeJS](<https://nodejs.org/en>), Use latest! It will allow faster downloading speed!
+
 ## Building
 
 Simply run ``` npm install ``` command to install all the dependencies
