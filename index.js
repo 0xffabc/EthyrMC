@@ -15,6 +15,7 @@ const crypto = require("crypto");
 const startInstaller = require("./src/install.js");
 const validate = require("./src/validate.js");
 const launch = require("./src/launch.js");
+const settingsMenu = require("./src/settingsMenu.js");
 
 let CLIENT_DATA = "";
 let username = "unknown";
@@ -45,6 +46,7 @@ const reloadTable = () => {
 	console.log("- [setuuid] => set auth UUID of mojang account, needed for online servers");
 	console.log("- [validate] => check if version hashes match with official");
 	console.log("- [clear] => remove file of versions you're working with");
+	console.log("- [settings] => manage minecraft settings");
 	console.log("- [launch] => launch currently selected version");
 	console.log("- [quit] => quit the program");
 	console.log("==============");
@@ -67,7 +69,7 @@ while (true) {
 	else if (command == "setversion") {
 		version = prompt("[Enter Version] -> ");
 	} else if (command == "install") {
-		if (prompt("[Warning!] Doing so will kick you out from command loop! Are you sure? [y/n]") !== "y") continue;
+		if (prompt("[Warning!] Doing so will kick you out from command loop! Are you sure? [y/n] ") !== "y") continue;
 		startInstaller(username, version);
 		break;
 	} else if (command == "clear") {
@@ -82,5 +84,8 @@ while (true) {
 	} else if (command == "validate") {
 		validate(version);
 		break;
-	}
+	} else if (command == "settings") {
+                              resetScreen();
+                              settingsMenu();
+               }
 };
