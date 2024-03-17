@@ -42,7 +42,7 @@ function settingsMenu() {
         if (!isNaN(num)) {
             console.log("[EthyrOptionsSetup] Selected index: " + num);
             const value = prompt("Value for " + keys[num] + " -> ");
-            const optionsNew = settingsSplit.map(setting => setting.startsWith(keys[num]) && setting.split(":")[0] + ":" + value).join(EOL);
+            const optionsNew = settingsSplit.map(setting => setting.startsWith(keys[num]) ? setting.split(":")[0] + ":" + value : setting).join(EOL);
             fs.writeFileSync("./minecraft/options.txt", optionsNew);
             console.log("[EthyrOptionsSetup] Wrote to ./minecraft/options.txt");
         } else if (subCommand == "quit") break;
