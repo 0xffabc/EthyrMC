@@ -4,6 +4,7 @@ const axios = require("axios");
 const fs = require("fs");
 const config = require("./config.js");
 const prompt = require("prompt-sync")();
+const crypto = require("crypto");
 let CLIENT_DATA = "";
 let username = "unknown";
 let uuid = "";
@@ -11,6 +12,17 @@ let version = "NULL";
 let rowsPassed = 0;
 let CLIENT_URL = "";
 const rows = process.stdout.rows;
+
+// Post-Install
+
+function compareHash(file, hash_) {
+    const f = fs.readFileSync(file);
+    const hash = crypto.createHash("sha1");
+    hash.update(f);
+    const hashf = hash.digest("hex");
+
+    return { match: hashf === hash_, hash:  hashf };
+}
 
 // Patch console.log
 
@@ -181,5 +193,36 @@ while (true) {
         let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + resolve(clientJar) + ";" + libs.map(e =>resolve("./minecraft/libraries/" + version + "/" + e)).join(";") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username).replace("${version_name}", version).replace("${game_directory}", resolve("./minecraft")).replace("${assets_root}", '"' + resolve(assetsDir.split("/").slice(0, -1).join("/")) + '"').replace("${assets_index_name}", '"' + assetIndex + '"').replace("${auth_uuid}", uuid).replace("--accessToken ${auth_access_token}", "").replace("${user_properties}", "normal").replace("${user_type}", "full") + " --accessToken letmeplaylol";
         console.log("[Ethyr] Command generated: " + command);
         (require("child_process")).execSync(command);
+    } else if (command == "validate") {
+        resetScreen();
+        const clientJar = "./minecraft/versions/" + version + "/" + version + ".jar";
+        const version_ = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
+        const libs = fs.readdirSync("./minecraft/libraries/" + version);
+        
+        console.log("[Ethyr] Got " + (libs.length + 1) + " files.");
+        // We use compareHash(path, originalHash) -> bool
+
+        let start = Date.now();
+        const hashDismatch = [];
+        libs.forEach((lib, index, length) => {
+            const libHash = version_.libraries.find(e => e.downloads?.artifact?.url?.split("/")?.pop() == lib)?.downloads?.artifact?.sha1;
+            if (!libHash) return hashDismatch.push(lib);
+
+            const doesMatch = compareHash("./minecraft/libraries/" + version + "/" + lib, libHash);
+            setTimeout(() => {
+                resetScreen();
+                hashDismatch.forEach(e => console.log("[!] " + e + " -> CORRUPTED"));
+                console.log("Hashing " + lib + " -> library");
+                console.log("Uptime: " + Math.floor((Date.now() - start) / 1000) + "s" + " " + (index / (version_.libraries.length - hashDismatch.length) * 100).toFixed(2) + "%")
+                console.log("Original " + libHash + "  ->  " + doesMatch.hash);
+                console.log("Match " + doesMatch.match ? "found" : "failed");
+                if (!doesMatch.match) hashDismatch.push(lib);
+                if (index == version_.libraries.length - 1) { 
+                    resetScreen();
+                    (require("child_process")).spawn("node index.js");
+                }
+            }, 500 * index);
+        });
+        break;
     }
 };
