@@ -1,8 +1,8 @@
 
 function libParser(libName) {
-    const rootFolder = libName.split(".")[0];
-    
-    const fullPath = (rootFolder ? rootFolder + "/" : "") + libName.split(":").join("/") + ".jar";
+    const pathSplit = libName.replaceAll(".", "/").replaceAll(":", "/");
+    const fullPath = pathSplit + pathSplit[pathSplit.length - 1] + ".jar";
+    console.log("[Debug] Parsed path: " + fullPath);
 
     return fullPath;
 }
