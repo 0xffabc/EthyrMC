@@ -39,7 +39,7 @@ function launch(version, username, uuid) {
                });
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
 	let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
-		.join(";") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
+		.join(";") + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
 		.replace("${version_name}", version)
 		.replace("${game_directory}", resolve("./minecraft"))
 		.replace("${assets_root}", '"' + resolve(assetsDir.split("/")
