@@ -8,6 +8,7 @@ const {
 const axios = require("axios");
 const fs = require("fs");
 const config = require("./config.js");
+const parseLib = require("../parsers/libparser.js");
 const prompt = require("prompt-sync")();
 const crypto = require("crypto");
 let version;
@@ -25,9 +26,9 @@ function launch(version, username, uuid) {
 		mainClass
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
-               const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.concat(minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries) : []);
+               const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.map(e => (!e.path && e.name) ? parseLib(e.name) : null).concat(minecraft.inheritsFrom ? JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries : []);
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
-	let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
+	let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
 		.join(";") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
 		.replace("${version_name}", version)
 		.replace("${game_directory}", resolve("./minecraft"))
