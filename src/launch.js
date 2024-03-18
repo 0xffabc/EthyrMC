@@ -17,7 +17,6 @@ let CLIENT_DATA = "";
 const rows = process.stdout.rows;
 
 function launch(version, username, uuid) {
-	const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries;
 	const assetIndex = "1.8";
 	const assetsDir = "./minecraft/assets/";
 	const nativesDir = "./minecraft/natives/";
@@ -26,6 +25,7 @@ function launch(version, username, uuid) {
 		mainClass
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
+               const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.concat(minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries) : []);
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
 	let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
 		.join(";") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
