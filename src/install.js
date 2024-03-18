@@ -47,6 +47,8 @@ const downloadAll = downloads => {
 		console.log("[Master] Invalid path: " + file[1]);
 		return queueMicrotask(e => downloadAll(downloads));
 	}
+               console.log("Actual path: " + file[0].split("/").slice(0, -1).join("/"));
+               fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), { recursive: true });
 	axios({
 			method: "GET",
 			url: file[1],
@@ -125,8 +127,7 @@ const startInstall = (username, versionId) => {
 							return;
 						}
 						// Prevent high I/O and network overload
-						downloads.push(["./minecraft/libraries/" + versionId + "/" + lib.downloads.artifact.url.split("/")[lib.downloads.artifact.url.split("/")
-							.length - 1], lib.downloads.artifact.url]);
+						downloads.push(["./minecraft/libraries/" + lib.downloads.artifact.path, lib.downloads.artifact.url]);
 						console.log("[Downloader] Saved " + lib.downloads.artifact.url);
 					});
 				});
