@@ -5,6 +5,8 @@ const fetch = (...args) => import('node-fetch')
 const {
 	resolve
 } = require("path");
+
+const patchGCMem = require("../patches/garbageCollector.js");
 const axios = require("axios");
 const fs = require("fs");
 const config = require("./config.js");
@@ -39,7 +41,7 @@ function launch(version, username, uuid) {
                });
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
 	let command = 'java -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
-		.join(";") + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
+		.join(";") + ";" + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
 		.replace("${version_name}", version)
 		.replace("${game_directory}", resolve("./minecraft"))
 		.replace("${assets_root}", '"' + resolve(assetsDir.split("/")
@@ -51,8 +53,8 @@ function launch(version, username, uuid) {
 		.replace("${user_properties}", "normal")
 		.replace("${user_type}", "full")
                               .replace("${version_type}", "EthyrMC") + " --accessToken letmeplaylol";
-	console.log("[Ethyr] Command generated: " + command);
+	console.log("[Ethyr] Command generated: " + patchGCMem(command));
 	(require("child_process"))
-	.execSync(command);
+	.execSync(patchGCMem(command));
 }
 module.exports = launch;

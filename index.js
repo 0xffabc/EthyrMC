@@ -16,11 +16,12 @@ const startInstaller = require("./src/install.js");
 const validate = require("./src/validate.js");
 const launch = require("./src/launch.js");
 const settingsMenu = require("./src/settingsMenu.js");
+const settings = (fs.readFileSync("./settings.txt", "utf8") || ";").split(";") || [];
 
 let CLIENT_DATA = "";
-let username = "unknown";
+let username = settings[0] || "unknown";
 let uuid = "";
-let version = "NULL";
+let version = settings[1] || "NULL";
 let rowsPassed = 0;
 let CLIENT_URL = "";
 const rows = process.stdout.rows;
@@ -65,8 +66,10 @@ while (true) {
 	const command = prompt("[Eth] -> ");
 	if (command == "username") {
 		username = prompt("[Change Username] -> ");
-	} else if (command == "quit") break;
-	else if (command == "setversion") {
+	} else if (command == "quit") {
+                  const file = fs.writeFileSync("./settings.txt", version + ";" + username);
+                  break;
+               } else if (command == "setversion") {
 		version = prompt("[Enter Version] -> ");
 	} else if (command == "install") {
 		if (prompt("[Warning!] Doing so will kick you out from command loop! Are you sure? [y/n] ") !== "y") continue;
@@ -80,7 +83,7 @@ while (true) {
 			recursive: true
 		});
 	} else if (command == "launch") {
-		launch(version, username, uuid)
+		launch(version, username, uuid);
 	} else if (command == "validate") {
 		validate(version);
 		break;
