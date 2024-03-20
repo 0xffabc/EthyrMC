@@ -16,6 +16,7 @@ const startInstaller = require("./src/install.js");
 const validate = require("./src/validate.js");
 const launch = require("./src/launch.js");
 const settingsMenu = require("./src/settingsMenu.js");
+const fixLauncherWrapper = require("./patches/launchWrapperDownload.js");
 const settings = (fs.readFileSync("./settings.txt", "utf8") || ";").split(";") || [];
 
 let CLIENT_DATA = "";

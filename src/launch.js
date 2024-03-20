@@ -9,6 +9,7 @@ const {
 const patchGCMem = require("../patches/garbageCollector.js");
 const axios = require("axios");
 const fs = require("fs");
+const path = require("path");
 const config = require("./config.js");
 const parseLib = require("../parsers/libparser.js");
 const prompt = require("prompt-sync")();
@@ -29,14 +30,11 @@ function launch(version, username, uuid) {
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.map(function (lib) {
-                   if (!lib?.downloads?.artifact?.path) {
                        lib.downloads = {
                            artifact: {
                                path: parseLib(lib.name)
                            }
                        }
-                   }
-
                    return lib;
                });
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
