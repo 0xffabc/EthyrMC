@@ -19,9 +19,9 @@ const settingsMenu = require("./src/settingsMenu.js");
 const settings = (fs.readFileSync("./settings.txt", "utf8") || ";").split(";") || [];
 
 let CLIENT_DATA = "";
-let username = settings[0] || "unknown";
+let username = settings[1] || "unknown";
 let uuid = "";
-let version = settings[1] || "NULL";
+let version = settings[0] || "NULL";
 let rowsPassed = 0;
 let CLIENT_URL = "";
 const rows = process.stdout.rows;
