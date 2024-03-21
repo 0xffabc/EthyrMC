@@ -8,7 +8,7 @@ function libParser(libName) {
     const version = groups[groups.length - 1];
     const artifact = groups[groups.length - 2];
     const filename = artifact + "-" + version + ".jar";
-    const fullPath = group0.join("/") + "/" + group1.join("/") + "/" + filename;
+    const fullPath = group0.join("/") + "/" + group1.join("/") + "/" + version + "/" + filename;
     console.log("[Debug] Generated path: " + fullPath);
 
     return fullPath;
