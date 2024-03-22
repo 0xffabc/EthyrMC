@@ -25,6 +25,7 @@ let uuid = "";
 let version = settings[0] || "NULL";
 let rowsPassed = 0;
 let CLIENT_URL = "";
+let javaP = settings[2] || "NULL";
 const rows = process.stdout.rows;
 // Patch console.log
 console.log = new Proxy(console.log, {
@@ -50,6 +51,7 @@ const reloadTable = () => {
 	console.log("- [clear] => remove file of versions you're working with");
 	console.log("- [settings] => manage minecraft settings");
 	console.log("- [launch] => launch currently selected version");
+               console.log("- [setjavap] => set path to java.exe. Set only path for JDK 8! You can also save the path into your bin and write command here.");
 	console.log("- [quit] => quit the program");
 	console.log("==============");
 };
@@ -63,12 +65,12 @@ while (true) {
 		reloadTable();
 		rowsPassed = 0;
 	};
-	console.log("User -> " + username + ", Version -> " + version);
+	console.log("User -> " + username + ", Version -> " + version + ", java.exe path -> " + javaP);
 	const command = prompt("[Eth] -> ");
 	if (command == "username") {
 		username = prompt("[Change Username] -> ");
 	} else if (command == "quit") {
-                  const file = fs.writeFileSync("./settings.txt", version + ";" + username);
+                  const file = fs.writeFileSync("./settings.txt", version + ";" + username + ";" + javaP);
                   break;
                } else if (command == "setversion") {
 		version = prompt("[Enter Version] -> ");
@@ -84,12 +86,14 @@ while (true) {
 			recursive: true
 		});
 	} else if (command == "launch") {
-		launch(version, username, uuid);
+		launch(version, username, uuid, javaP);
 	} else if (command == "validate") {
 		validate(version);
 		break;
 	} else if (command == "settings") {
                               resetScreen();
                               settingsMenu();
+               } else if (command == "setjavap") {
+                              javaP = prompt("[Change java path] JRE/JDK/OracleJava/Microsoft java java.exe path-> ");
                }
 };
