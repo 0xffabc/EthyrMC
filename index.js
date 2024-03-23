@@ -21,7 +21,7 @@ const settings = (fs.readFileSync("./settings.txt", "utf8") || ";").split(";") |
 
 let CLIENT_DATA = "";
 let username = settings[1] || "unknown";
-let uuid = "";
+let uuid = "wtfgaysletmeplaypls";
 let version = settings[0] || "NULL";
 let rowsPassed = 0;
 let CLIENT_URL = "";
@@ -87,6 +87,7 @@ while (true) {
 		});
 	} else if (command == "launch") {
 		launch(version, username, uuid, javaP);
+                              break;
 	} else if (command == "validate") {
 		validate(version);
 		break;

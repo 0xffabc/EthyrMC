@@ -15,12 +15,14 @@ const parseLib = require("../parsers/libparser.js");
 const prompt = require("prompt-sync")();
 const crypto = require("crypto");
 let version;
+let downloads = [];
 let rowsPassed = 0;
 let CLIENT_URL = "";
 let CLIENT_DATA = "";
+let shouldntStart;
 const rows = process.stdout.rows;
 
-function launch(version, username, uuid, javaP) {
+function launch(version, username, uuid = "a", javaP) {
 	const assetIndex = "1.8";
 	const assetsDir = "./minecraft/assets/";
 	const nativesDir = "./minecraft/natives/";
@@ -35,6 +37,15 @@ function launch(version, username, uuid, javaP) {
                                path: parseLib(lib.name)
                            }
                        }
+
+                       if (!fs.existsSync(lib.downloads.artifact.path)) {
+                       console.log("Not found -> " + lib.downloads.artifact.path);
+                       shouldntStart = true;
+                       const eztrick = "https://repo1.maven.org/maven2/" + lib.downloads.artifact.path;
+                       fs.mkdirSync("./minecraft/libraries/" + lib.downloads.artifact.path.split("/").slice(0, -1).join("/"), { recursive: true }); 
+                      downloads.push([eztrick, "./minecraft/libraries/" + lib.downloads.artifact.path]);
+                   }
+
                    return lib;
                });
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
@@ -52,7 +63,28 @@ function launch(version, username, uuid, javaP) {
 		.replace("${user_type}", "full")
                               .replace("${version_type}", "EthyrMC") + " --accessToken letmeplaylol";
 	console.log("[Ethyr] Command generated: " + patchGCMem(command));
-	(require("child_process"))
-	.execSync(patchGCMem(command));
+
+               function download(arr, run) {
+                   if (arr.length == 0) return run();
+
+                   const file = arr.shift();
+                   axios({
+                       method: "GET",
+                       url: file[0],
+                       responseType: "stream"
+                   }).then(res => {
+                       console.log("[lib] -> " + file[1]);
+                       res.data.pipe(fs.createWriteStream(file[1]));
+                   }).catch(err => {
+                       console.log("[ERR] Pushed " + file[0] + " to the queue end: " + err.stack);
+                       arr.push(file);
+                   }).finally(eve => {
+                       setTimeout(() => download(arr, run), 200);
+                   });
+               }
+               
+               console.log("Missing libraries: " + downloads);
+               if (downloads && prompt("Do you want to download libs? (empty -> skip)")) download(downloads, () => (require("child_process")).execSync(patchGCMem(command)));
+	(require("child_process")).execSync(patchGCMem(command));
 }
 module.exports = launch;
