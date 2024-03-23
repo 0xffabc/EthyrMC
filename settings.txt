@@ -1,1 +1,1 @@
-
+1.8.8-forge1.8.8-11.15.0.1655;pulsarproe;"C:\Program Files\Java\jre1.8.0_311\bin\java.exe"

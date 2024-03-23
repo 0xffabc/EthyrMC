@@ -2,18 +2,14 @@ const fetch = (...args) => import('node-fetch')
 	.then(({
 		default: fetch
 	}) => fetch(...args));
-const {
-	resolve
-} = require("path");
 
 const patchGCMem = require("../patches/garbageCollector.js");
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
+
+const { axios, fs, prompt, crypto, resolve } = global;
+
 const config = require("./config.js");
 const parseLib = require("../parsers/libparser.js");
-const prompt = require("prompt-sync")();
-const crypto = require("crypto");
+
 let version;
 let downloads = [];
 let rowsPassed = 0;

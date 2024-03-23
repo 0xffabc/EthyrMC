@@ -2,14 +2,9 @@ const fetch = (...args) => import('node-fetch')
 	.then(({
 		default: fetch
 	}) => fetch(...args));
-const {
-	resolve
-} = require("path");
-const axios = require("axios");
-const fs = require("fs");
-const config = require("./config.js");
-const prompt = require("prompt-sync")();
-const crypto = require("crypto");
+
+const { axios, fs, config, prompt, crypto, resolve } = global;
+
 let version;
 let rowsPassed = 0;
 let CLIENT_URL = "";
@@ -47,8 +42,10 @@ const downloadAll = downloads => {
 		console.log("[Master] Invalid path: " + file[1]);
 		return queueMicrotask(e => downloadAll(downloads));
 	}
-               console.log("Actual path: " + file[0].split("/").slice(0, -1).join("/"));
-               fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), { recursive: true });
+	console.log("Actual path: " + file[0].split("/").slice(0, -1).join("/"));
+	fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), {
+		recursive: true
+	});
 	axios({
 			method: "GET",
 			url: file[1],
@@ -123,11 +120,17 @@ const startInstall = (username, versionId) => {
 					setTimeout(() => clientDownload(), version.libraries.length);
 					CLIENT_DATA = version;
 					version.libraries.forEach((lib, index, length) => {
+						let isNative;
 						if (!lib?.downloads?.artifact) {
-							return;
+							const type = process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux");
+							lib.downloads.artifact = {
+								path: lib.classifiers["natives-" + type].path,
+								url: lib.classifiers["natives-" + type].url
+							}
+							isNative = true;
 						}
 						// Prevent high I/O and network overload
-						downloads.push(["./minecraft/libraries/" + lib.downloads.artifact.path, lib.downloads.artifact.url]);
+						downloads.push(["./minecraft/" + (isNative ? "natives/" : "libraries/") + lib.downloads.artifact.path, lib.downloads.artifact.url]);
 						console.log("[Downloader] Saved " + lib.downloads.artifact.url);
 					});
 				});

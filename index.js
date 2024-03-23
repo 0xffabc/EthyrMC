@@ -1,17 +1,15 @@
-const fetch = (...args) => import('node-fetch')
-	.then(({
-		default: fetch
-	}) => fetch(...args));
-const {
-	resolve
-} = require("path");
 
-const axios = require("axios");
-const fs = require("fs");
-const config = require("./config.js");
-const prompt = require("prompt-sync")();
-const crypto = require("crypto");
+global.axios = require("axios");
+global.fs = require("fs");
+global.config = require("./config.js");
+global.prompt = require("prompt-sync")();
+global.crypto = require("crypto");
+global.os = require("crypto");
+global.resolve = require("path").resolve;
 
+const { axios, fs, config, prompt, crypto, resolve } = global;
+
+const discordRpc = require("./features/rpc.js");
 const startInstaller = require("./src/install.js");
 const validate = require("./src/validate.js");
 const launch = require("./src/launch.js");

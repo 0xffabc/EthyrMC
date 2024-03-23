@@ -1,17 +1,6 @@
-const fetch = (...args) => import('node-fetch')
-	.then(({
-		default: fetch
-	}) => fetch(...args));
-const {
-	resolve
-} = require("path");
 
-const os = require('os');
-const axios = require("axios");
-const fs = require("fs");
-const config = require("./config.js");
-const prompt = require("prompt-sync")();
-const crypto = require("crypto");
+const { axios, fs, config, prompt, crypto, os, resolve } = global;
+
 // stapsi ah
 let rowsPassed = 0;
 const rows = process.stdout.rows;
