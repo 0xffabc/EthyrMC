@@ -28,25 +28,17 @@ function launch(version, username, uuid = "a", javaP) {
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.map(function (lib) {
-                       lib.downloads = {
+                      /* lib.downloads = {
                            artifact: {
                                path: parseLib(lib.name)
                            }
-                       }
-
-                       if (!fs.existsSync(lib.downloads.artifact.path)) {
-                       console.log("Not found -> " + lib.downloads.artifact.path);
-                       shouldntStart = true;
-                       const eztrick = "https://repo1.maven.org/maven2/" + lib.downloads.artifact.path;
-                       fs.mkdirSync("./minecraft/libraries/" + lib.downloads.artifact.path.split("/").slice(0, -1).join("/"), { recursive: true }); 
-                      downloads.push([eztrick, "./minecraft/libraries/" + lib.downloads.artifact.path]);
-                   }
+                       } */
 
                    return lib;
                });
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
-	let command = javaP + ' -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))
-		.join(";") + ";" + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + e?.downloads?.artifact?.path))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
+	let command = javaP + ' -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || e?.downloads?.classifiers["natives-" + (process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux"))]?.path)))
+		.join(";") + ";" + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || e?.downloads?.classifiers["natives-" + (process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux"))]?.path)))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
 		.replace("${version_name}", version)
 		.replace("${game_directory}", resolve("./minecraft"))
 		.replace("${assets_root}", '"' + resolve(assetsDir.split("/")

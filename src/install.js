@@ -20,6 +20,11 @@ const resetScreen = () => {
 let maxDown = 760;
 let startTime = 0;
 const downloadAll = downloads => {
+                  if (!startTime) {
+                      maxDown = downloads.length;
+	    startTime = Date.now();
+                  }
+
 	resetScreen();
 	console.log("[EthyrInternal] [" + (Math.fround(100 - (downloads.length / maxDown * 100))
 		.toFixed(2)) + "%] -> Downloaded");
@@ -77,7 +82,6 @@ const startInstall = (username, versionId) => {
 					console.log("[Installer] assetIndex => " + version.assetIndex.id + " at " + version.assetIndex.url);
 					console.log("[Installer] client => " + version.downloads.client.url);
 					console.log("[Installer] libraries => " + version.libraries.length + " libs found");
-					fs.mkdirSync("./minecraft/libraries/" + versionId);
 					console.log("[Downloader] Saving libraries to ./minecraft/libraries/" + versionId);
 					const nativesDownload = () => {};
 					const assetsDownload = () => {
@@ -90,8 +94,6 @@ const startInstall = (username, versionId) => {
 								const array = Object.keys(assets.objects);
 								console.log("[Downloader] Total assets: " + array.length);
 								setTimeout(() => {
-									maxDown = downloads.length;
-									startTime = Date.now();
 									downloadAll(downloads);
 								}, array.length + 1000);
 								array.forEach(asset => {
@@ -120,17 +122,23 @@ const startInstall = (username, versionId) => {
 					setTimeout(() => clientDownload(), version.libraries.length);
 					CLIENT_DATA = version;
 					version.libraries.forEach((lib, index, length) => {
-						let isNative;
-						if (!lib?.downloads?.artifact) {
+						let lib1 = {};
+						if (lib.downloads?.classifiers) {
 							const type = process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux");
-							lib.downloads.artifact = {
-								path: lib.classifiers["natives-" + type].path,
-								url: lib.classifiers["natives-" + type].url
-							}
-							isNative = true;
+                                                                                                                           if (lib.downloads.classifiers["natives-" + type]) {
+							    lib1.downloads = {
+                                                                                                                                   artifact: {
+							    	    path: lib.downloads.classifiers["natives-" + type].path,
+							    	    url: lib.downloads.classifiers["natives-" + type].url
+							        }
+                                                                                                                               }
+                                                                                                                           }
+					
 						}
+
 						// Prevent high I/O and network overload
-						downloads.push(["./minecraft/" + (isNative ? "natives/" : "libraries/") + lib.downloads.artifact.path, lib.downloads.artifact.url]);
+						downloads.push(["./minecraft/libraries/" + lib.downloads.artifact.path, lib.downloads.artifact.url]);
+                                                                                                          lib1.downloads && downloads.push(["./minecraft/libraries/" + lib1.downloads.artifact.path, lib1.downloads.artifact.url]);
 						console.log("[Downloader] Saved " + lib.downloads.artifact.url);
 					});
 				});
