@@ -25,7 +25,7 @@ function validate(version) {
 	resetScreen();
 	const clientJar = "./minecraft/versions/" + version + "/" + version + ".jar";
 	const version_ = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
-	const libs = fs.readdirSync("./minecraft/libraries/" + version);
+	const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.map(e => "./minecraft/libraries/" + (e?.downloads?.artifact?.path));
 	console.log("[Ethyr] Got " + (libs.length + 1) + " files.");
 	// We use compareHash(path, originalHash) -> bool
 	let start = Date.now();

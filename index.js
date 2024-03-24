@@ -4,7 +4,6 @@ global.fs = require("fs");
 global.config = require("./config.js");
 global.prompt = require("prompt-sync")();
 global.crypto = require("crypto");
-global.os = require("crypto");
 global.resolve = require("path").resolve;
 
 const { axios, fs, config, prompt, crypto, resolve } = global;
