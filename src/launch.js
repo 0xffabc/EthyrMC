@@ -23,15 +23,7 @@ function launch(version, username, uuid = "a", javaP) {
 		mainClass
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
-               const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries.map(function (lib) {
-                      /* lib.downloads = {
-                           artifact: {
-                               path: parseLib(lib.name)
-                           }
-                       } */
-
-                   return lib;
-               });
+               const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries;
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
 	let command = javaP + ' -D"org.lwjgl.librarypath"="' + resolve(nativesDir) + '" -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : "") + resolve(clientJar) + ";" + libs.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || e?.downloads?.classifiers["natives-" + (process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux"))]?.path || parseLib(e?.downloads?.artifact?.name || e?.downloads?.classifiers?.name || e?.name))))
 		.join(";") + ";" + (minecraft.inheritsFrom ? (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || e?.downloads?.classifiers["natives-" + (process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux"))]?.path || parseLib(e?.downloads?.artifact?.name || e?.downloads?.classifiers?.name || e?.name))))).join(";") : "") + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)

@@ -3,7 +3,6 @@
 const { axios, fs, config, prompt, crypto, resolve, fetch } = global;
 
 let version;
-let rowsPassed = 0;
 let CLIENT_URL = "";
 let CLIENT_DATA = "";
 const rows = process.stdout.rows;
@@ -80,7 +79,7 @@ const startInstall = (username, versionId) => {
 					console.log("[Installer] client => " + version.downloads.client.url);
 					console.log("[Installer] libraries => " + version.libraries.length + " libs found");
 					console.log("[Downloader] Saving libraries to ./minecraft/libraries/" + versionId);
-					const nativesDownload = () => {};
+
 					const assetsDownload = () => {
 						console.log("[Downloader] Saving assets to ./minecraft/assets/" + version.assetIndex.id);
 						if (fs.existsSync("./minecraft/assets/" + version.assetIndex.id)) return downloadAll(downloads);
@@ -118,19 +117,18 @@ const startInstall = (username, versionId) => {
 					}
 					setTimeout(() => clientDownload(), version.libraries.length);
 					CLIENT_DATA = version;
-					version.libraries.forEach((lib, index, length) => {
+					version.libraries.forEach(lib => {
 						let lib1 = {};
 						if (lib.downloads?.classifiers) {
 							const type = process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux");
-                                                                                                                           if (lib.downloads.classifiers["natives-" + type]) {
+                            if (lib.downloads.classifiers["natives-" + type]) {
 							    lib1.downloads = {
-                                                                                                                                   artifact: {
-							    	    path: lib.downloads.classifiers["natives-" + type].path,
+                                    artifact: {
+										path: lib.downloads.classifiers["natives-" + type].path,
 							    	    url: lib.downloads.classifiers["natives-" + type].url
 							        }
-                                                                                                                               }
-                                                                                                                           }
-					
+								}
+                            }
 						}
 
 						// Prevent high I/O and network overload

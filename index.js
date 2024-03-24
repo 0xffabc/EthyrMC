@@ -17,12 +17,10 @@ const settingsMenu = require("./src/settingsMenu.js");
 const fixLauncherWrapper = require("./patches/launchWrapperDownload.js");
 const settings = (fs.readFileSync("./settings.txt", "utf8") || ";").split(";") || [];
 
-let CLIENT_DATA = "";
 let username = settings[1] || "unknown";
 let uuid = "wtfgaysletmeplaypls";
 let version = settings[0] || "NULL";
 let rowsPassed = 0;
-let CLIENT_URL = "";
 let javaP = settings[2] || "NULL";
 const rows = process.stdout.rows;
 // Patch console.log
