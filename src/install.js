@@ -1,9 +1,6 @@
-const fetch = (...args) => import('node-fetch')
-	.then(({
-		default: fetch
-	}) => fetch(...args));
 
-const { axios, fs, config, prompt, crypto, resolve } = global;
+
+const { axios, fs, config, prompt, crypto, resolve, fetch } = global;
 
 let version;
 let rowsPassed = 0;

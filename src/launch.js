@@ -1,11 +1,7 @@
-const fetch = (...args) => import('node-fetch')
-	.then(({
-		default: fetch
-	}) => fetch(...args));
 
 const patchGCMem = require("../patches/garbageCollector.js");
 
-const { axios, fs, prompt, crypto, resolve } = global;
+const { axios, fs, prompt, crypto, resolve, fetch } = global;
 
 const config = require("./config.js");
 const parseLib = require("../parsers/libparser.js");
