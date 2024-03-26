@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./tests/NoTestsIndeed.js",
+    "build": "node ./scripts/Build.js",
+    "js": "node ./scripts/RunLauncherJS.js",
+    "bin": "node ./scripts/RunLauncherBin.js"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +16,6 @@
     "axios": "^1.6.8",
     "crypto": "^1.0.1",
     "discord-rpc": "^4.0.1",
-    "extract-zip": "^2.0.1",
-    "mvn-artifact-name-parser": "^6.1.0",
     "node-fetch": "^3.3.2",
     "prompt-sync": "^4.2.0"
   }
