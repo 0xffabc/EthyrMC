@@ -132,9 +132,9 @@ const startInstall = (username, versionId) => {
 						}
 
 						// Prevent high I/O and network overload
-						downloads.push(["./minecraft/libraries/" + lib.downloads.artifact.path, lib.downloads.artifact.url]);
+						lib?.downloads?.artifact?.path && downloads.push(["./minecraft/libraries/" + lib?.downloads?.artifact?.path, lib.downloads.artifact.url]);
                                                                                                           lib1.downloads && downloads.push(["./minecraft/libraries/" + lib1.downloads.artifact.path, lib1.downloads.artifact.url]);
-						console.log("[Downloader] Saved " + lib.downloads.artifact.url);
+						console.log("[Downloader] Saved " + lib?.downloads?.artifact?.url);
 					});
 				});
 		});
