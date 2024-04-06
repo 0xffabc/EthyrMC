@@ -1,6 +1,14 @@
+const {
+	axios,
+	fs,
+	config,
+	prompt,
+	crypto,
+	resolve,
+	fetch
+} = global;
 
-
-const { axios, fs, config, prompt, crypto, resolve, fetch } = global;
+const decompress = require("decompress");
 
 let version;
 let CLIENT_URL = "";
@@ -15,11 +23,13 @@ const resetScreen = () => {
 // MasterFile => path, downloadUrl
 let maxDown = 760;
 let startTime = 0;
+let nativesDownload = [];
 const downloadAll = downloads => {
-                  if (!startTime) {
-                      maxDown = downloads.length;
-	    startTime = Date.now();
-                  }
+
+	if (!startTime) {
+		maxDown = downloads.length;
+		startTime = Date.now();
+	}
 
 	resetScreen();
 	console.log("[EthyrInternal] [" + (Math.fround(100 - (downloads.length / maxDown * 100))
@@ -44,7 +54,7 @@ const downloadAll = downloads => {
 		return queueMicrotask(e => downloadAll(downloads));
 	}
 	console.log("Actual path: " + file[0].split("/").slice(0, -1).join("/"));
-	fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), {
+	!file[0].includes("native") && fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), {
 		recursive: true
 	});
 	axios({
@@ -53,7 +63,11 @@ const downloadAll = downloads => {
 			responseType: "stream"
 		})
 		.then(res => {
-			res.data.pipe(fs.createWriteStream(file[0]));
+                                             res.data.pipe(fs.createWriteStream(file[0]));
+                                             if (downloads.length == 0 || downloads.length == 1) {
+                                                 const zips = fs.readdirSync("./minecraft/natives").filter(e => e.includes(".jar"));
+                                                 zips.forEach(zip => decompress("./minecraft/natives/" + zip, "./minecraft/natives").catch(e => {}));
+                                             };
 		})
 		.catch(error => {
 			console.log("[Master] Pushing " + file[0] + " to the queue end with error: " + error);
@@ -106,7 +120,7 @@ const startInstall = (username, versionId) => {
 								});
 							});
 					}
-					// WE'RE DOWNLOADING CLIENT.JAR WITH THIS ONE
+
 					const clientDownload = () => {
 						console.log("[Downloader] Saving client to ./minecraft/versions/" + versionId);
 						fs.mkdirSync("./minecraft/versions/" + versionId);
@@ -118,22 +132,18 @@ const startInstall = (username, versionId) => {
 					setTimeout(() => clientDownload(), version.libraries.length);
 					CLIENT_DATA = version;
 					version.libraries.forEach(lib => {
-						let lib1 = {};
+						let nativePath, native, nativeDownload;
 						if (lib.downloads?.classifiers) {
 							const type = process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux");
-                            if (lib.downloads.classifiers["natives-" + type]) {
-							    lib1.downloads = {
-                                    artifact: {
-										path: lib.downloads.classifiers["natives-" + type].path,
-							    	    url: lib.downloads.classifiers["natives-" + type].url
-							        }
-								}
-                            }
+							if (lib.downloads.classifiers["natives-" + type]) {
+								nativePath = resolve("./minecraft/natives/" + (lib.downloads.classifiers["natives-" + type].url.split("/")[lib.downloads.classifiers["natives-" + type].url.split("/").length - 1]));
+								nativeDownload = lib.downloads.classifiers["natives-" + type].url;
+								native = true;
+							}
 						}
-
 						// Prevent high I/O and network overload
 						lib?.downloads?.artifact?.path && downloads.push(["./minecraft/libraries/" + lib?.downloads?.artifact?.path, lib.downloads.artifact.url]);
-                                                                                                          lib1.downloads && downloads.push(["./minecraft/libraries/" + lib1.downloads.artifact.path, lib1.downloads.artifact.url]);
+						native && downloads.push([nativePath, nativeDownload]);
 						console.log("[Downloader] Saved " + lib?.downloads?.artifact?.url);
 					});
 				});
