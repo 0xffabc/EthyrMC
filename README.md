@@ -50,7 +50,6 @@ More reminder: the launcher doesn't automatically parse paths when specifying pa
 2. Support mojang accounts
 3. Add fancy setversions command, or a new command that shows every version
 4. Add mods auto-update (forge and fabric especially)
-5. Optimise I/O Bound performance by requiring every module once (fs, axios and etc)
 
 # Common bugs and issues
 
