@@ -3,9 +3,7 @@ global.axios = require("axios");
 global.fs = require("fs");
 global.config = require("./config.js");
 global.prompt = require("prompt-sync")();
-global.crypto = require("crypto");
 global.resolve = require("path").resolve;
-global.fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const { axios, fs, config, prompt, crypto, resolve } = global;
 

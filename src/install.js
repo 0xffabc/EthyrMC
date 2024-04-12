@@ -1,11 +1,8 @@
 const {
 	axios,
 	fs,
-	config,
-	prompt,
-	crypto,
 	resolve,
-	fetch
+               config
 } = global;
 
 const decompress = require("decompress");

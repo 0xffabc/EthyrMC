@@ -1,6 +1,5 @@
-const { axios, fs, prompt, crypto, resolve, fetch } = global;
+const { fs, resolve } = global;
 
-const config = require("./config.js");
 const parseLib = require("../parsers/libparser.js");
 const rows = process.stdout.rows;
 const { spawn } = require("child_process");
@@ -29,8 +28,7 @@ function launch(version, username, uuid = "a", javaP) {
                               .replace("${user_type}", "mojang")
                               .replace("${natives_directory}", resolve(nativesDir))
                               .replace("${version_type}", "EthyrMC")}`;
-	console.log("[Ethyr] Command generated: ", command);
-               
+
 	spawn(command, { shell: true, stdio: "inherit" }).on("exit", () => {  });
 }
 module.exports = launch;

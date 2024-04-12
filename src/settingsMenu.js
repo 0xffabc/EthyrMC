@@ -1,5 +1,5 @@
 
-const { axios, fs, config, prompt, crypto, os, resolve } = global;
+const { fs, prompt, resolve } = global;
 
 // stapsi ah
 let rowsPassed = 0;
@@ -15,7 +15,7 @@ function settingsMenu() {
     console.log("[Minecraft] Settings");
     const mcSettings = fs.readFileSync("./minecraft/options.txt").toString();
 
-    const { EOL } = os;
+    const { EOL } = require("os");
     const settingsSplit = mcSettings.split(EOL);
     const settingsJsonLike = settingsSplit.map(e => e.split(":"));
     const keys = settingsJsonLike.map(setting => setting[0]);

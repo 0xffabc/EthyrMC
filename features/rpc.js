@@ -1,3 +1,7 @@
+/*
+
+Doesnt work, will be updated later
+
 const rpc = require("discord-rpc");
 
 const _ = new rpc.Client({ transport: 'ipc' });
@@ -16,3 +20,5 @@ _.on("ready", () => {
         });
     }, 15000);
 });
+
+*/
