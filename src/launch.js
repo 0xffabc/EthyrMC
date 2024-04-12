@@ -25,7 +25,7 @@ function launch(version, username, uuid = "a", javaP) {
                const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries;
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
                const classpath = (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : resolve(clientJar)) + ";" + libs.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name)))).join(";") + (minecraft.inheritsFrom ? ";" + (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name))))).join(";") : "");
-	let command = javaP + ' -D"org.lwjgl.librarypath"="' + resolve(nativesDir) + '" -D"java.library.path"="' + resolve(nativesDir) + '" -cp "' + classpath + '" ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
+	let command = javaP + ' -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true -Djava.net.preferIPv4Stack=true -XX:HeapDumpPath=intel_ez_javaw.exe_minecraft.exe -javaagent:./ely.by/authlib-injector-1.2.5.jar=ely.by -D"org.lwjgl.librarypath"="' + resolve(nativesDir) + '" -D"java.library.path"="' + resolve(nativesDir) + '" -cp ' + classpath + ' ' + mainClass + ' ' + minecraftArguments.replace("${auth_player_name}", username)
 		.replace("${version_name}", version)
 		.replace("${game_directory}", resolve("./minecraft"))
 		.replace("${assets_root}", '"' + resolve(assetsDir.split("/")
@@ -38,7 +38,7 @@ function launch(version, username, uuid = "a", javaP) {
 		.replace("${classpath}", classpath)
                               .replace("${user_type}", "full")
                               .replace("${natives_directory}", resolve(nativesDir))
-                              .replace("${version_type}", "EthyrMC") + " --accessToken aah -XX:HeapDumpPath=intel_ez_javaw.exe_minecraft.exe";
+                              .replace("${version_type}", "EthyrMC") + " --accessToken null";
 	console.log("[Ethyr] Command generated: " + patchGCMem(command));
 
                function download(arr, run) {
