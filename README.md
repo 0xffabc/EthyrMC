@@ -46,10 +46,9 @@ More reminder: the launcher doesn't automatically parse paths when specifying pa
 
 # ToDo List
 
-1. Support >1.12.2 versions
-2. Support mojang accounts
-3. Add fancy setversions command, or a new command that shows every version
-4. Add mods auto-update (forge and fabric especially)
+1. Support mojang accounts
+2. Add fancy setversions command, or a new command that shows every version
+3. Add mods auto-update (forge and fabric especially)
 
 # Common bugs and issues
 
