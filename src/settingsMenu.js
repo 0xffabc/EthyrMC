@@ -1,5 +1,5 @@
 
-const { fs, prompt, resolve } = global;
+const { fs, prompt } = global;
 
 // stapsi ah
 let rowsPassed = 0;

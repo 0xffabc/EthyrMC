@@ -20,6 +20,7 @@ let uuid = "wtfgaysletmeplaypls";
 let version = settings[0] || "NULL";
 let rowsPassed = 0;
 let javaP = settings[2] || "NULL";
+let forcefs = settings[3] == "true" || false;
 const rows = process.stdout.rows;
 // Patch console.log
 console.log = new Proxy(console.log, {
@@ -35,26 +36,25 @@ const resetScreen = () => {
 }
 // Table
 const reloadTable = () => {
-	console.log("  = = = Ethyr = = = ");
 	console.log("EthyrMC Commands:");
 	console.log("- [install] => select minecraft version to install it");
 	console.log("- [username] => set account username");
 	console.log("- [setversion] => set version you're working with");
-	console.log("- [setuuid] => set auth UUID of mojang account, needed for online servers");
+	console.log("- [setuuid] => set UUID of mojang account");
 	console.log("- [validate] => check if version hashes match with official");
 	console.log("- [clear] => remove file of versions you're working with");
 	console.log("- [settings] => manage minecraft settings");
 	console.log("- [launch] => launch currently selected version");
-               console.log("- [setjavap] => set path to java.exe. Set only path for JDK 8! You can also save the path into your bin and write command here.");
+               console.log("- [setjavap] => set path to java.exe.");
+               console.log("- [setff] => sets minecraft to use borderless fullscreen");
 	console.log("- [quit] => quit the program");
-	console.log("==============");
 };
 // Pre-Render
 resetScreen();
 reloadTable();
 // Command loop
 while (true) {
-	if (rowsPassed >= rows) {
+	if (rowsPassed >= 4) {
 		resetScreen();
 		reloadTable();
 		rowsPassed = 0;
@@ -64,12 +64,12 @@ while (true) {
 	if (command == "username") {
 		username = prompt("[Change Username] -> ");
 	} else if (command == "quit") {
-                  const file = fs.writeFileSync("./settings.txt", version + ";" + username + ";" + javaP);
+                  const file = fs.writeFileSync("./settings.txt", version + ";" + username + ";" + javaP + ";" + forcefs);
                   break;
                } else if (command == "setversion") {
 		version = prompt("[Enter Version] -> ");
 	} else if (command == "install") {
-		if (prompt("[Warning!] Doing so will kick you out from command loop! Are you sure? [y/n] ") !== "y") continue;
+		resetScreen();
 		startInstaller(username, version);
 		break;
 	} else if (command == "clear") {
@@ -80,7 +80,8 @@ while (true) {
 			recursive: true
 		});
 	} else if (command == "launch") {
-		launch(version, username, uuid, javaP);
+                              resetScreen();
+		launch(version, username, uuid, javaP, true, forcefs);
                               break;
 	} else if (command == "validate") {
 		validate(version);
@@ -90,5 +91,7 @@ while (true) {
                               settingsMenu();
                } else if (command == "setjavap") {
                               javaP = prompt("[Change java path] JRE/JDK/OracleJava/Microsoft java java.exe path-> ");
+               } else if (command == "setff") {
+                              console.log("[Forceff] " + (forcefs = !forcefs));
                }
 };
