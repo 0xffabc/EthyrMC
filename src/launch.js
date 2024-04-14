@@ -5,13 +5,13 @@ const rows = process.stdout.rows;
 const { spawn } = require("child_process");
 
 function launch(version, username, uuid = "a", javaP, javaagent = true, fullscreen = true) {
+	const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
 	const assetsDir = "./minecraft/assets/";
-	const nativesDir = "./minecraft/natives/";
+	const nativesDir = "./minecraft/natives/" + (minecraft.inheritsFrom ? minecraft.inheritsFrom : version);
 	const clientJar = "./minecraft/versions/" + version + "/" + version + ".jar";
 	const {
 		mainClass, assets
 	} = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
-               const minecraft = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json"));
                const libs = JSON.parse(fs.readFileSync("./minecraft/versions/" + version + "/" + version + ".json")).libraries;
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
                const classpath = (minecraft.inheritsFrom ? resolve("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;") : resolve(clientJar)) + ";" + libs.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name)))).join(";") + (minecraft.inheritsFrom ? ";" + (JSON.parse(fs.readFileSync("./minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => resolve("./minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name))))).join(";") : "");
@@ -28,7 +28,7 @@ function launch(version, username, uuid = "a", javaP, javaagent = true, fullscre
                               .replace("${user_type}", "mojang")
                               .replace("${natives_directory}", resolve(nativesDir))
                               .replace("${version_type}", "EthyrMC")} ${fullscreen?"--width=1920 --height=1080":""}`;
-
+               console.log(command);
 	spawn(command, { shell: true, stdio: "inherit" }).on("exit", () => {  });
 }
 module.exports = launch;

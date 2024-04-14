@@ -62,8 +62,8 @@ const downloadAll = downloads => {
         .then(res => {
             res.data.pipe(fs.createWriteStream(file[0]));
             if (downloads.length == 0 || downloads.length == 1) {
-                const zips = fs.readdirSync("./minecraft/natives").filter(e => e.includes(".jar"));
-                zips.forEach(zip => decompress("./minecraft/natives/" + zip, "./minecraft/natives").catch(e => {}));
+                const zips = fs.readdirSync("./minecraft/natives/" + version).filter(e => e.includes(".jar"));
+                zips.forEach(zip => decompress("./minecraft/natives/" + version + "/" + zip, "./minecraft/natives/" + version).catch(e => {}));
             };
         })
         .catch(error => {
@@ -96,6 +96,7 @@ const startInstall = (username, versionId) => {
                         fetch(version.assetIndex.url)
                             .then(e => e.json())
                             .then(assets => {
+                                fs.writeFileSync("./minecraft/assets/indexes/" + version.assetIndex.id + ".json", Buffer.from(JSON.stringify(assets), "utf-8"));
                                 const array = Object.keys(assets.objects);
                                 console.log("[Downloader] Total assets: " + array.length);
 
@@ -112,6 +113,7 @@ const startInstall = (username, versionId) => {
                     const clientDownload = () => {
                         console.log("[Downloader] Saving client to ./minecraft/versions/" + versionId);
                         fs.mkdirSync("./minecraft/versions/" + versionId);
+                        fs.mkdirSync("./minecraft/natives/" + versionId);
                         downloads.push("./minecraft/versions/" + versionId + "/" + versionId + ".jar", version.downloads.client.url);
                         console.log("[Downloader] Client.jar has been pushed to queue");
                         CLIENT_URL = version.downloads.client.url;
@@ -124,7 +126,7 @@ const startInstall = (username, versionId) => {
                         if (lib.downloads?.classifiers) {
                             const type = process.platform == "win32" ? "windows" : (process.platform == "darwin" ? "macos" : "linux");
                             if (lib.downloads.classifiers["natives-" + type]) {
-                                nativePath = resolve("./minecraft/natives/" + (lib.downloads.classifiers["natives-" + type].url.split("/")[lib.downloads.classifiers["natives-" + type].url.split("/").length - 1]));
+                                nativePath = resolve("./minecraft/natives/" + versionId + "/" + (lib.downloads.classifiers["natives-" + type].url.split("/")[lib.downloads.classifiers["natives-" + type].url.split("/").length - 1]));
                                 nativeDownload = lib.downloads.classifiers["natives-" + type].url;
                                 native = true;
                             }
