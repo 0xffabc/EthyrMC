@@ -1,3 +1,0 @@
-#BetterFps Config
-#Sun Mar 31 17:55:36 YEKT 2024
-algorithm=rivens-half
