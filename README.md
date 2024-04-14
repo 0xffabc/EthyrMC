@@ -44,11 +44,9 @@ More reminder: the launcher doesn't automatically parse paths when specifying pa
            ```
            This suffering is made because of windows "peculiarities"
 
-# ToDo List
+# Not added features
 
-1. Support mojang accounts
-2. Add fancy setversions command, or a new command that shows every version
-3. Add mods auto-update (forge and fabric especially)
+The launcher doesn't support mojang accounts and sometimes is specific to graphics card, sometimes if your gpu is outdated, newer versions of minecraft (>=1.13) will not start because of hardware.
 
 # Common bugs and issues
 
