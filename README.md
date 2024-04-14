@@ -50,14 +50,4 @@ The launcher doesn't support mojang accounts and sometimes is specific to graphi
 
 # Common bugs and issues
 
-1. Module not found
-   There are 2 variants of what happend: This is probably a bug of launcher, you didn't install modules through ```npm install``` command, or you're in weing directory (you should run this command in the project root, obviously)
-2. Weird JDK-Related errors
-   Install JDK-8.
-3. Command (path)java(-w/"").exe not found
-   Set path or command that leads to java.exe or javaw.exe by using setjavap command
-
-# Is the launcher safe?
-
-The launcher itself doesn't collect your passwords, nor your minecraft license or discord account, and doesn't have viruses in it. Launcher uses only trusted and open-source libraries, which doesn't have viruses too.
-If you want to check if the launcher have viruses or not, check the code in /src, /patches and /parsers directories.
+If you see some issues in the code, report it in issues tab.
