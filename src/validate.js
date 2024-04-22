@@ -1,6 +1,5 @@
-global.crypto = require("crypto");
 
-const { fs, crypto, resolve } = global;
+const { fs, crypto } = global;
 
 // stapsi ah
 let rowsPassed = 0;

@@ -3,9 +3,8 @@ global.axios = require("axios");
 global.fs = require("fs");
 global.config = require("./config.js");
 global.prompt = require("prompt-sync")();
-global.resolve = require("path").resolve;
 
-const { axios, fs, config, prompt, crypto, resolve } = global;
+const { axios, fs, config, prompt, crypto } = global;
 
 const discordRpc = require("./features/rpc.js");
 const startInstaller = require("./src/install.js");
