@@ -15,7 +15,7 @@ function launch(version, username, uuid = "a", javaP, javaagent = true, fullscre
                const libs = JSON.parse(fs.readFileSync("minecraft/versions/" + version + "/" + version + ".json")).libraries;
                const minecraftArguments = minecraft.minecraftArguments ? minecraft.minecraftArguments : minecraft.arguments.game.filter(e => typeof e !== "object").join(" ");
                const classpath = (minecraft.inheritsFrom ? "minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".jar;" : clientJar) + ";" + libs.map(e => "minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name))).join(";") + (minecraft.inheritsFrom ? ";" + (JSON.parse(fs.readFileSync("minecraft/versions/" + minecraft.inheritsFrom + "/" + minecraft.inheritsFrom + ".json")).libraries.map(e => "minecraft/libraries/" + (e?.downloads?.artifact?.path || parseLib(e?.downloads?.artifact?.name || e?.name)))).join(";") : "");
-                  const command = `${javaP} ${javaagent ? "-javaagent:ely.by/authlib-injector-1.2.5.jar=ely.by " : ""}${fullscreen?"-Dorg.lwjgl.opengl.Window.undecorated=true ":""}-D"java.library.path"=${nativesDir} -cp ${classpath} ${mainClass} ${minecraftArguments.replace("${auth_player_name}", username).replace("${version_name}", version)
+                  const command = `${javaP} -splash:logo.png -D"java.library.path"=${nativesDir} -cp ${classpath} ${mainClass} ${minecraftArguments.replace("${auth_player_name}", username).replace("${version_name}", version)
 		.replace("${game_directory}", "minecraft")
 		.replace("${assets_root}", assetsDir.split("/")
 			.slice(0, -1)
@@ -27,7 +27,7 @@ function launch(version, username, uuid = "a", javaP, javaagent = true, fullscre
 		.replace("${classpath}", classpath)
                               .replace("${user_type}", "mojang")
                               .replace("${natives_directory}", nativesDir)
-                              .replace("${version_type}", "EthyrMC")} ${fullscreen?"--width=1920 --height=1080":""}`;
+                              .replace("${version_type}", "EthyrMC")}`;
                console.log(command);
 	spawn(command, { shell: true, stdio: "inherit" }).on("exit", () => {  });
 }
