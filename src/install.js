@@ -22,7 +22,11 @@ const completeInstall = () => {
 }
 
 const downloadAll = async downloads => {
-    if (!downloads) return;
+    if (downloads.length == 0) {
+        fs.writeFileSync("minecraft/versions/" + versionId_ + "/" + versionId_ + ".json", JSON.stringify(CLIENT_DATA));
+        completeInstall();
+	return;
+    }; 
     resetScreen();
     console.log("[EthyrInternal] [" + (Math.fround(100 - (downloads.length / maxDown * 100))
         .toFixed(2)) + "%] -> Downloaded");
@@ -33,10 +37,6 @@ const downloadAll = async downloads => {
         responseType: "stream"
     });
     res.data.pipe(fs.createWriteStream(file[0]), console.log);
-    if (downloads.length == 0) {
-        fs.writeFileSync("minecraft/versions/" + versionId_ + "/" + versionId_ + ".json", JSON.stringify(CLIENT_DATA));
-        completeInstall();	
-    };
     console.log("=== File Info ===");
     console.log("Filename: " + file[0].split("/")[file[0].split("/").length - 1]);
     console.log("Minecraft Client version " + versionId_);
@@ -47,7 +47,7 @@ const downloadAll = async downloads => {
     fs.mkdir(file[0].split("/").slice(0, -1).join("/"), {
         recursive: true
     }, console.log);
-    return setImmediate(() => downloadAll(downloads));
+    setImmediate(() => downloadAll(downloads));
 };
 const startInstall = async (username, versionId) => {
     let downloads = [];
