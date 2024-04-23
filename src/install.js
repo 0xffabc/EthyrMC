@@ -22,10 +22,7 @@ const completeInstall = () => {
 }
 
 const downloadAll = async downloads => {
-    if (!startTime) {
-        maxDown = downloads.length;
-        startTime = Date.now();
-    }
+    if (!downloads) return;
     resetScreen();
     console.log("[EthyrInternal] [" + (Math.fround(100 - (downloads.length / maxDown * 100))
         .toFixed(2)) + "%] -> Downloaded");
@@ -87,6 +84,8 @@ const startInstall = async (username, versionId) => {
         downloads.push(["minecraft/assets/objects/" + assets.objects[asset].hash[0] + assets.objects[asset].hash[1] + "/" + assets.objects[asset].hash, assetUrl]);
         console.log("[Downloader] Saved " + asset);
     };
+    maxDown = downloads.length;
+    startTime = Date.now(); 
     downloadAll(downloads);
 };
 
