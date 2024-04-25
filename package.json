@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./tests/NoTestsIndeed.js",
-    "build": "node ./scripts/Build.js",
+    "build": "npx webpack . --target node --mode development --devtool false",
     "js": "node ./scripts/RunLauncherJS.js",
     "bin": "node ./scripts/RunLauncherBin.js"
   },
@@ -15,6 +15,10 @@
   "dependencies": {
     "axios": "^1.6.8",
     "decompress": "^4.2.1",
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.2.0",
+    "webpack": "^5.91.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
   }
 }
