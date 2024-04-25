@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./tests/NoTestsIndeed.js",
-    "build": "npx webpack . --target node --mode development --devtool false",
+    "build": "npx webpack . --target node --mode development --devtool false && node ./scripts/Build.js",
     "js": "node dist/main.js",
     "bin": "node ./scripts/RunLauncherBin.js"
   },
