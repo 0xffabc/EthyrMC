@@ -6,6 +6,7 @@ global.prompt = require("prompt-sync")();
 
 const { axios, fs, config, prompt, crypto } = global;
 
+const envSetup = require("./patches/setupMcEnvironment.js");
 const discordRpc = require("./features/rpc.js");
 const startInstaller = require("./src/install.js");
 const validate = require("./src/validate.js");
