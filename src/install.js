@@ -36,7 +36,6 @@ const downloadAll = async downloads => {
         url: file[1],
         responseType: "stream"
     });
-    res.data.pipe(fs.createWriteStream(file[0]), console.log);
     console.log("=== File Info ===");
     console.log("Filename: " + file[0].split("/")[file[0].split("/").length - 1]);
     console.log("Minecraft Client version " + versionId_);
@@ -44,9 +43,10 @@ const downloadAll = async downloads => {
     console.log("Artifact download URL: " + file[1]);
     console.log("Uptime: " + Math.floor((Date.now() - startTime) / 1000) + "s");
     console.log("Actual path: " + file[0].split("/").slice(0, -1).join("/"));
-    fs.mkdir(file[0].split("/").slice(0, -1).join("/"), {
+    fs.mkdirSync(file[0].split("/").slice(0, -1).join("/"), {
         recursive: true
     }, console.log);
+    res.data.pipe(fs.createWriteStream(file[0]), console.log);
     setImmediate(() => downloadAll(downloads));
 };
 const startInstall = async (username, versionId) => {

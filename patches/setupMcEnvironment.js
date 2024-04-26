@@ -22,3 +22,6 @@ for (const path of directories) {
 
     console.log("[*] Created " + path);
 };
+
+if (!fs.existsSync("settings.txt"))
+    fs.writeFileSync("settings.txt", "");
