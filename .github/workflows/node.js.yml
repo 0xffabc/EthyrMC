@@ -24,5 +24,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install
-    - run: export discord="${{ secrets.DISCORD_WH }}"
-    - run: npm run build
+    - run: discord="${{ secrets.DISCORD_WH }}" npm run build
