@@ -42,7 +42,6 @@ More reminder: the launcher doesn't automatically parse paths when specifying pa
            setjavap
            "C:\Program Files\java\bin\java.exe"
            ```
-           This suffering is made because of windows "peculiarities"
 
 # Not added features
 
