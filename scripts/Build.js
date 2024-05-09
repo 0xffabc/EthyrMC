@@ -12,7 +12,7 @@ Put the file into dist/main.js folder and execute 'npm run js' command while hav
 
 axios({
     method: "POST",
-    url: "https://discord.com/api/webhooks/1228997122376859768/NFB7ZBaNkEDBGQ4AjaOzADcQmQVC8i2kqRy_MwYT04sk9Qtn0_QaqKuUIZxAu1FiH8te",
+    url: process.env.discord,
     data: data,
     headers: {
         "Content-Type": "text/plain"
