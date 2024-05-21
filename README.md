@@ -10,7 +10,7 @@ A console-based minecraft launcher written in javascript
 
 - Set natives folder as you need, by default it's for windows here.
 - Install [OpenAL](<https://www.openal.org/downloads/>)
-- Install [NodeJS](<https://nodejs.org/en>), Use latest! It will allow faster downloading speed!
+- Install [NodeJS](<https://nodejs.org/en>).
 
 ## Building
 
@@ -22,7 +22,7 @@ Run ``` node index.js ``` while being in project root.
 
 ## Usage
 
-The launcher offers command-line interface. There are some command here:
+The list below are commands available in the launcher
 1. install -> available only after running setversion, installs minecraft version you specified.
 2. username -> sets username for minecraft.
 3. setversion -> sets version of minecraft to work with. Warning: you should specify it by yourself, for more info: [look at version_manifest.json](<https://piston-meta.mojang.com/mc/game/version_manifest.json>)
