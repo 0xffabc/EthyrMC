@@ -1,3 +1,5 @@
+![i](https://shields.io/badge/JavaScript-F7DF1E?logo=JavaScript&logoColor=000&style=flat-square) ![GitHub Repo stars](https://img.shields.io/github/stars/0xffabc/EthyrMC) ![GitHub forks](https://img.shields.io/github/forks/0xffabc/EthyrMC)
+
 # EthyrMC
 
 Current version: 1.0
