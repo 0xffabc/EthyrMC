@@ -1,7 +1,5 @@
-
 const { fs, crypto } = global;
 
-// stapsi ah
 let rowsPassed = 0;
 const rows = process.stdout.rows;
 // hash comparator
